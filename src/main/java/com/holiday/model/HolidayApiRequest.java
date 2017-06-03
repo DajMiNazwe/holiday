@@ -1,21 +1,17 @@
 package com.holiday.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.Date;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class HolidayApiRequest {
 
     private String firstCountryCode;
 
     private String secondCountryCode;
 
-    private Date date;
+    private Long year;
+
+    private Long month;
+
+    private Long day;
 }
