@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 public class Holiday {
+
     private String status;
+
     @JsonProperty("holidays")
     private HolidayApiResponse[] holidays;
 }

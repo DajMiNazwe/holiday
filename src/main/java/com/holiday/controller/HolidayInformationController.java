@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 @RestController
 public class HolidayInformationController {
 
@@ -21,7 +18,7 @@ public class HolidayInformationController {
     }
 
     @GetMapping("/holiday/{firstCountryCode}/{secondCountryCode}/{date}")
-    public HolidayServiceResponse getHolidays(HolidayApiRequest holidayApiRequest) throws IOException, URISyntaxException {
+    public HolidayServiceResponse getHolidays(HolidayApiRequest holidayApiRequest) {
         return holidayInformationService.findHolidays(holidayApiRequest);
     }
 }

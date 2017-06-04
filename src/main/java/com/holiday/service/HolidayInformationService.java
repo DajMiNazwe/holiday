@@ -10,8 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.time.LocalDate;
 
 @Service
@@ -20,21 +19,20 @@ public class HolidayInformationService {
     private HolidaySettings holidaySettings;
 
     @Autowired
-    public HolidayInformationService(HolidaySettings holidaySettings) {
+    public HolidayInformationService(final HolidaySettings holidaySettings) {
         this.holidaySettings = holidaySettings;
     }
 
-    public HolidayServiceResponse findHolidays(HolidayApiRequest holidayApiRequest) throws IOException, URISyntaxException {
+    public HolidayServiceResponse findHolidays(HolidayApiRequest holidayApiRequest) {
         LocalDate startingDate = LocalDate.parse(holidayApiRequest.getDate());
         String firstCountryCode = holidayApiRequest.getFirstCountryCode();
         String secondCountryCode = holidayApiRequest.getSecondCountryCode();
 
-        while ((getHoliday(firstCountryCode, startingDate.toString()).getHolidays().length == 0) ||
-                (getHoliday(secondCountryCode, startingDate.toString()).getHolidays().length == 0)) {
+        while ((getHoliday(firstCountryCode, startingDate.toString()).getHolidays().length == 0)
+                || (getHoliday(secondCountryCode, startingDate.toString()).getHolidays().length == 0)) {
             startingDate = startingDate.plusDays(1);
             holidayApiRequest.setDate(startingDate.toString());
         }
-
         Holiday firstCountryHoliday = getHoliday(holidayApiRequest.getFirstCountryCode(), startingDate.toString());
         Holiday secondCountryHoliday = getHoliday(holidayApiRequest.getSecondCountryCode(), startingDate.toString());
 
@@ -48,6 +46,12 @@ public class HolidayInformationService {
 
     private Holiday getHoliday(String countryCode, String date) {
         RestTemplate restTemplate = new RestTemplate();
+        URI uri = buildUri(countryCode, date);
+        System.out.println(Thread.currentThread().getName());
+        return restTemplate.getForEntity(uri, Holiday.class).getBody();
+    }
+
+    private URI buildUri(String countryCode, String date) {
         LocalDate localDate = LocalDate.parse(date);
         UriComponents uri = UriComponentsBuilder.fromUriString(holidaySettings.getEndpoint())
                 .queryParam("key", holidaySettings.getKey())
@@ -57,6 +61,6 @@ public class HolidayInformationService {
                 .queryParam("day", localDate.getDayOfMonth())
                 .build();
         System.out.println(uri);
-        return restTemplate.getForEntity(uri.toUri(), Holiday.class).getBody();
+        return uri.toUri();
     }
 }
