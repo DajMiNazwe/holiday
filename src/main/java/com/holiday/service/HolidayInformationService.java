@@ -47,7 +47,6 @@ public class HolidayInformationService {
     private Holiday getHoliday(String countryCode, String date) {
         RestTemplate restTemplate = new RestTemplate();
         URI uri = buildUri(countryCode, date);
-        System.out.println(Thread.currentThread().getName());
         return restTemplate.getForEntity(uri, Holiday.class).getBody();
     }
 
