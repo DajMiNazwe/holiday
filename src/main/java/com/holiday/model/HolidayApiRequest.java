@@ -9,9 +9,5 @@ public class HolidayApiRequest {
 
     private String secondCountryCode;
 
-    private Long year;
-
-    private Long month;
-
-    private Long day;
+    private String date;
 }
