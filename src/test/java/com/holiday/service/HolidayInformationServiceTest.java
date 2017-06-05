@@ -5,6 +5,7 @@ import com.holiday.model.Holiday;
 import com.holiday.model.HolidayApiRequest;
 import com.holiday.model.HolidayApiResponse;
 import com.holiday.model.HolidayServiceResponse;
+import com.holiday.shared.RestTemplateFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

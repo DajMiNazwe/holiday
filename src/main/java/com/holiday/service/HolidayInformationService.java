@@ -4,6 +4,7 @@ import com.holiday.HolidaySettings;
 import com.holiday.model.Holiday;
 import com.holiday.model.HolidayApiRequest;
 import com.holiday.model.HolidayServiceResponse;
+import com.holiday.shared.RestTemplateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -35,6 +36,7 @@ public class HolidayInformationService {
             startingDate = startingDate.plusDays(1);
             holidayApiRequest.setDate(startingDate.toString());
         }
+
         Holiday firstCountryHoliday = getHoliday(holidayApiRequest.getFirstCountryCode(), startingDate.toString());
         Holiday secondCountryHoliday = getHoliday(holidayApiRequest.getSecondCountryCode(), startingDate.toString());
 
