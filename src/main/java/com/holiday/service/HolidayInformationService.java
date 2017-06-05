@@ -6,7 +6,6 @@ import com.holiday.model.HolidayApiRequest;
 import com.holiday.model.HolidayServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,11 +15,14 @@ import java.time.LocalDate;
 @Service
 public class HolidayInformationService {
 
-    private HolidaySettings holidaySettings;
+    final private HolidaySettings holidaySettings;
+
+    final private RestTemplateFactory restTemplateFactory;
 
     @Autowired
-    public HolidayInformationService(final HolidaySettings holidaySettings) {
+    public HolidayInformationService(HolidaySettings holidaySettings, RestTemplateFactory restTemplateFactory) {
         this.holidaySettings = holidaySettings;
+        this.restTemplateFactory = restTemplateFactory;
     }
 
     public HolidayServiceResponse findHolidays(HolidayApiRequest holidayApiRequest) {
@@ -45,9 +47,8 @@ public class HolidayInformationService {
     }
 
     private Holiday getHoliday(String countryCode, String date) {
-        RestTemplate restTemplate = new RestTemplate();
         URI uri = buildUri(countryCode, date);
-        return restTemplate.getForEntity(uri, Holiday.class).getBody();
+        return (Holiday) restTemplateFactory.getForEntity(uri, Holiday.class).getBody();
     }
 
     private URI buildUri(String countryCode, String date) {

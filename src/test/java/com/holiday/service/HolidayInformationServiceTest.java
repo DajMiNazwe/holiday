@@ -15,9 +15,10 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HolidayInformationServiceTest {
@@ -29,25 +30,28 @@ public class HolidayInformationServiceTest {
     private HolidaySettings holidaySettings;
 
     @Mock
-    private RestTemplate restTemplate;
+    private RestTemplateFactory restTemplateFactory;
 
     @Test
     public void getHolidaysShouldReturnHoliday() throws Exception {
         // given
+        String date = "2010-10-10";
         HolidayApiRequest holidayApiRequest = new HolidayApiRequest();
-        holidayApiRequest.setDate("2010-10-10");
+        holidayApiRequest.setDate(date);
         String endpoint = "https://holidayapi.com/v1/holidays";
         Holiday holiday = new Holiday();
         holiday.setStatus("200");
-        holiday.setHolidays(new HolidayApiResponse[]{});
+        List<HolidayApiResponse> holidays = new ArrayList<>();
+        holidays.add(new HolidayApiResponse());
+        holiday.setHolidays(holidays.toArray(new HolidayApiResponse[]{}));
         Mockito.when(holidaySettings.getEndpoint()).thenReturn(endpoint);
         Mockito.when(holidaySettings.getKey()).thenReturn("key");
-        Mockito.when(restTemplate.getForEntity(Mockito.any(URI.class), Matchers.any(Class.class))).thenReturn(new ResponseEntity(HttpStatus.ACCEPTED));
+        Mockito.when(restTemplateFactory.getForEntity(Matchers.any(URI.class), Matchers.any(Class.class))).thenReturn(new ResponseEntity(holiday, HttpStatus.ACCEPTED));
 
         // when
         HolidayServiceResponse result = sut.findHolidays(holidayApiRequest);
 
         // then
-        Assertions.assertThat(result.getDate()).isEqualTo("lol");
+        Assertions.assertThat(result.getDate()).isEqualTo(date);
     }
 }
