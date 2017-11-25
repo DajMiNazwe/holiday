@@ -24,23 +24,27 @@ public class LoggerTest {
         // given
 
         // when
-        initializeThreads();
 
         // then
-
+        initializeAndAssertThreads();
     }
 
-    private void initializeThreads() {
+    private void initializeAndAssertThreads() {
         for (int i = 0; i < 1000; i++) {
             new ThreadSingletonLoader().start();
         }
     }
 
-    public static class ThreadSingletonLoader extends Thread {
+    private static class ThreadSingletonLoader extends Thread {
 
         @Override
         public void run() {
             Logger newLogger = Logger.getLogger();
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             newLogger.Log(ThreadSingletonLoader.currentThread().getId());
             assertThat(newLogger).isSameAs(LoggerTest.logger);
         }
