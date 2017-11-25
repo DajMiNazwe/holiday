@@ -1,6 +1,6 @@
 holidayapi:
   endpoint: "https://holidayapi.com/v1/holidays"
-  key: "05786d66-05cf-4b4b-8d93-b80e0eb71e17"
+  key: "04778468-b0cc-44d0-8822-dcdbd390d6ff"
 
 server:
   port: 8110

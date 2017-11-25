@@ -3,8 +3,11 @@ package com.holiday.service;
 import com.holiday.HolidaySettings;
 import com.holiday.model.Holiday;
 import com.holiday.model.HolidayApiRequest;
+import com.holiday.model.HolidayMapper;
 import com.holiday.model.HolidayServiceResponse;
 import com.holiday.shared.RestTemplateFactory;
+import com.holiday.utils.Logger;
+import com.holiday.utils.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -19,6 +22,8 @@ public class HolidayInformationService {
     final private HolidaySettings holidaySettings;
 
     final private RestTemplateFactory restTemplateFactory;
+
+    final private Logger logger = Logger.getLogger();
 
     @Autowired
     public HolidayInformationService(HolidaySettings holidaySettings, RestTemplateFactory restTemplateFactory) {
@@ -41,9 +46,13 @@ public class HolidayInformationService {
         Holiday secondCountryHoliday = getHoliday(holidayApiRequest.getSecondCountryCode(), startingDate.toString());
 
         HolidayServiceResponse holidayServiceResponse = new HolidayServiceResponse();
+        HolidayMapper holidayMapper = (HolidayMapper) new MapperFactory().getMapper("holidayApi");
         holidayServiceResponse.setDate(startingDate.toString());
         holidayServiceResponse.setFirstHoliday(firstCountryHoliday.getHolidays()[0].getName());
         holidayServiceResponse.setSecondHoliday(secondCountryHoliday.getHolidays()[0].getName());
+        HolidayApiRequest holidayApiRequest1 = holidayMapper.map(holidayServiceResponse);
+        logger.Log(holidayApiRequest1.toString());
+        logger.Log(holidayServiceResponse.toString());
 
         return holidayServiceResponse;
     }
