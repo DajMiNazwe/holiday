@@ -2,14 +2,18 @@ package com.holiday.utils;
 
 public class Logger {
 
-    private static Logger logger = null;
+    private static Logger logger;
 
     private Logger() {
     }
 
-    public static synchronized Logger getLogger() {
+    public static Logger getLogger() {
         if (logger == null) {
-            logger = new Logger();
+            synchronized (Logger.class) {
+                if (logger == null) {
+                    logger = new Logger();
+                }
+            }
         }
         return logger;
     }
